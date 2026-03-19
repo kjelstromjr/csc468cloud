@@ -1,0 +1,4 @@
+services:
+  mongodb:
+    image: mongo
+    

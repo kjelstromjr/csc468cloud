@@ -1,4 +1,20 @@
 services:
   mongodb:
     image: mongo
-    
+    restart: unless-stopped
+    environment:
+        MONGO_INITDB_ROOT_USERNAME: admin
+        MONGO_INITDB_ROOT_PASSWORD: admin
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+  node:
+    build: node
+    ports: 
+        - "8080:8080"
+    depends_on:
+        mongodb:
+            condition: service_healthy
+    command: node app.js
